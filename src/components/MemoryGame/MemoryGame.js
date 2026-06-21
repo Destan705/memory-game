@@ -1,93 +1,167 @@
-// 12 cards - in 3 rows 4 cols
-
-// We can click on 2 buttons to show the values, and if they match then we disable those buttons
-// if they do not match, then we reset the buttons on the next click
-
-// show game over if time runs out or if they get all the matches
+import "./MemoryGame.css";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { emojiUrl } from "../utils/emoji";
+import { ICON_SETS } from "../utils/iconSets";
 
-function MemoryGame({ numOfCards }) {
-  const startingCards = ["Dog", "Cat", "Fish", "Bird", "Snake", "Rabbit"];
+function shuffle(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function MemoryGame({ numOfCards, difficultyKey, difficultyLabel, timeLimit }) {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const themeKey = state?.theme || "animals";
+  const theme = ICON_SETS[themeKey] || ICON_SETS.animals;
 
   const [cards, setCards] = useState([]);
-  const [screenCards, setScreenCards] = useState([]);
+  const [flipped, setFlipped] = useState([]); // up to 2 indices face-up right now
+  const [matched, setMatched] = useState([]); // indices that are permanently matched
+  const [mismatch, setMismatch] = useState([]); // indices currently shaking
+  const [moves, setMoves] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(timeLimit);
+  const [locked, setLocked] = useState(false);
+  const finishedRef = useRef(false);
 
-  let pickIndex1 = useRef(null);
-  let pickIndex2 = useRef(null);
-
+  // Build and shuffle the deck once on mount, using the chosen theme's icons
   useEffect(() => {
-    const tempCards1 = [];
-    const tempCards2 = [];
-    const xArr = [];
+    const icons = theme.icons.slice(0, numOfCards);
+    setCards(shuffle([...icons, ...icons]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [numOfCards, themeKey]);
 
-    for (var i = 0; i < numOfCards; i++) {
-      tempCards1.push(startingCards[i]); // D, C, F, B
-      tempCards2.push(startingCards[i]); // D, C, F, B
-      xArr.push("x");
-      xArr.push("x");
+  // Countdown timer
+  useEffect(() => {
+    if (finishedRef.current) return;
+    if (timeLeft <= 0) {
+      finishGame(false);
+      return;
     }
+    const id = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timeLeft]);
 
-    tempCards1.sort(() => Math.random() - 0.5); // C F D
-    tempCards2.sort(() => Math.random() - 0.5); // F C D
-
-    setCards([...tempCards1, ...tempCards2]); // C F D F C D
-    setScreenCards([...xArr]);
-  }, []);
-
-  function handleCardClick(index) {
-    if (!pickIndex1.current) {
-      pickIndex1.current = index;
-    } else if (!pickIndex2.current) {
-      pickIndex2.current = index;
-    } else {
-      pickIndex1.current = null;
-      pickIndex2.current = null;
+  // Win check
+  useEffect(() => {
+    if (cards.length > 0 && matched.length === cards.length) {
+      finishGame(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matched, cards]);
 
-    console.log(pickIndex1);
-    console.log(pickIndex2);
-
-    const tempCards = [];
-    for (var i = 0; i < numOfCards * 2; i++) {
-      tempCards[i] = "X";
-      if (i == pickIndex1.current || i == pickIndex2.current) {
-        tempCards[i] = cards[i];
-      }
-    }
-    // Call your new function here
-
-    setScreenCards(tempCards);
+  function finishGame(won) {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    navigate("/result", {
+      state: {
+        won,
+        moves,
+        timeLeft,
+        timeLimit,
+        totalPairs: numOfCards,
+        pairsMatched: matched.length / 2,
+        difficultyKey,
+        difficultyLabel,
+        theme: themeKey,
+      },
+    });
   }
 
-  // Check the values at pickINdex 1 and 2 from cards
+  function handleCardClick(index) {
+    if (locked) return;
+    if (flipped.includes(index) || matched.includes(index)) return;
 
-  // if they are the same then we want to tell the code
-  // to make those indexes "invalid", create a third state/ref array
-  // called inactiveCards, and when we render the buttons to the screen below
-  // we add in some code ot make the button disabled and show the text
+    const nextFlipped = [...flipped, index];
+    setFlipped(nextFlipped);
 
-  // The new array can store null or teh text value of that index
+    if (nextFlipped.length === 2) {
+      setLocked(true);
+      setMoves((m) => m + 1);
+      const [a, b] = nextFlipped;
 
-  console.log(cards);
+      if (cards[a] === cards[b]) {
+        setMatched((prev) => [...prev, a, b]);
+        setFlipped([]);
+        setLocked(false);
+      } else {
+        // give the player a beat to see both cards before they flip back
+        setTimeout(() => {
+          setMismatch([a, b]);
+          setTimeout(() => {
+            setMismatch([]);
+            setFlipped([]);
+            setLocked(false);
+          }, 400);
+        }, 500);
+      }
+    }
+  }
+
+  const progressPct = Math.max(0, (timeLeft / timeLimit) * 100);
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = String(timeLeft % 60).padStart(2, "0");
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        width: "200px",
-        margin: "2rem",
-      }}
-    >
-      {cards.map((c, i) => (
-        <button
-          key={`${c}${i}`}
-          onClick={(event) => handleCardClick(i)}
-          style={{ padding: "1rem" }}
-        >
-          {screenCards[i]}
-        </button>
-      ))}
+    <div className={`memory-game ${difficultyKey}`}>
+      <div className="game-content">
+        <div className="game-header">
+          <button className="back-button" onClick={() => navigate("/")}>
+            ← Back
+          </button>
+          <span className="difficulty-tag">
+            <span className="theme-emoji">{theme.icon}</span>
+            {difficultyLabel}
+          </span>
+          <span className={`timer ${progressPct < 25 ? "timer-low" : ""}`}>
+            {minutes}:{seconds}
+          </span>
+        </div>
+
+        <div className="progress-track">
+          <div
+            className={`progress-fill ${progressPct < 25 ? "low" : ""}`}
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+
+        <div className="game-stats">
+          <span>
+            {matched.length / 2} / {numOfCards} pairs
+          </span>
+          <span className="moves">{moves} moves</span>
+        </div>
+
+        <div className="card-grid">
+          {cards.map((icon, i) => {
+            const isFlipped = flipped.includes(i) || matched.includes(i);
+            const isMatched = matched.includes(i);
+            const isMismatch = mismatch.includes(i);
+            return (
+              <button
+                key={i}
+                className={`memory-card ${isFlipped ? "flipped" : ""} ${
+                  isMatched ? "matched" : ""
+                } ${isMismatch ? "shake" : ""}`}
+                onClick={() => handleCardClick(i)}
+                disabled={isFlipped}
+              >
+                <div className="card-inner">
+                  <div className="card-back">✦</div>
+                  <div className="card-front">
+                    <img src={emojiUrl(icon)} alt="" className="card-emoji" />
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

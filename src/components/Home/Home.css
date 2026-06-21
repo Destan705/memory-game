@@ -1,0 +1,204 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600&display=swap");
+
+.home-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 4rem 1.5rem;
+  background: radial-gradient(ellipse at top, #221c3f 0%, #0c0a18 65%);
+  font-family: "Inter", sans-serif;
+}
+
+/* ---- Header ---- */
+
+.home-icon {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+}
+
+.home-title {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 800;
+  font-size: 3rem;
+  color: #f5f3ff;
+  letter-spacing: 0.5px;
+}
+
+.home-subtitle {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: #a5a2c4;
+}
+
+/* ---- Card theme picker ---- */
+
+.theme-section {
+  max-width: 640px;
+  width: 100%;
+}
+
+.theme-section-label {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b6885;
+  margin-bottom: 1rem;
+}
+
+.theme-options {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.theme-card {
+  background-color: #17142a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  min-width: 140px;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.theme-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background-color: #1c1830;
+}
+
+.theme-card:active {
+  transform: translateY(0);
+}
+
+.theme-card.selected {
+  border-color: #8b7af5;
+  background-color: rgba(139, 122, 245, 0.14);
+  box-shadow: 0 0 18px rgba(139, 122, 245, 0.3);
+}
+
+.theme-card-icon {
+  font-size: 1.75rem;
+}
+
+.theme-card-name {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #f5f3ff;
+}
+
+.theme-card-desc {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #8b88a8;
+}
+
+.theme-preview {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 1.4rem;
+}
+
+.theme-preview-more {
+  color: #6b6885;
+  font-weight: 600;
+}
+
+/* ---- Buttons ---- */
+
+.home-page-buttons {
+  max-width: 640px;
+  width: 100%;
+}
+
+.difficulty-button {
+  background-color: #17142a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  padding: 1.5rem 2rem;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.difficulty-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background-color: #1c1830;
+}
+
+.difficulty-button:active {
+  transform: translateY(0);
+}
+
+.difficulty-label {
+  font-family: "Baloo 2", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.difficulty-meta {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #8b88a8;
+  margin-top: 0.25rem;
+}
+
+.difficulty-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  margin-left: 1.5rem;
+}
+
+.easy-label {
+  color: #4ade80;
+}
+
+.medium-label {
+  color: #fbbf24;
+}
+
+.hard-label {
+  color: #fb7185;
+}
+
+/* ---- Footer caption ---- */
+
+.home-page-caption {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b6885;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 480px) {
+  .home-title {
+    font-size: 2.25rem;
+  }
+
+  .theme-card {
+    min-width: 100px;
+    padding: 1rem;
+  }
+
+  .difficulty-button {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .difficulty-label {
+    font-size: 1.25rem;
+  }
+}

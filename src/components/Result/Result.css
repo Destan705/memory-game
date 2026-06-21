@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap");
+
+.result-page {
+  min-height: 100vh;
+  background: #0d0a1a;
+  color: #e8e4f5;
+  font-family: "Nunito", sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.result-title {
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.result-page.easy .result-title {
+  color: #6ee7a0;
+}
+.result-page.medium .result-title {
+  color: #fbbf24;
+}
+.result-page.hard .result-title {
+  color: #fb7185;
+}
+
+.star-row {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.star {
+  color: #352f55;
+  margin: 0 0.2rem;
+}
+
+.star.filled {
+  color: #fbbf24;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+}
+
+.stats-card {
+  background: #1c1832;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: "DM Mono", monospace;
+  padding: 0.5rem 0;
+  color: #a8a3c0;
+}
+
+.stat-row:not(:last-child) {
+  border-bottom: 1px solid #2a2448;
+}
+
+.play-again-button,
+.choose-stage-button {
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.play-again-button {
+  background: #6d5fe8;
+  color: #fff;
+}
+
+.play-again-button:hover {
+  background: #5847d9;
+}
+
+.choose-stage-button {
+  background: transparent;
+  border: 1px solid #4338ca;
+  color: #c9c3e8;
+}
+
+.choose-stage-button:hover {
+  background: rgba(67, 56, 202, 0.15);
+}
