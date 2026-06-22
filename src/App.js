@@ -47,9 +47,3 @@ function App() {
 }
 
 export default App;
-/* <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/game/easy" element={<MemoryGame numOfCards={6} />} />
-      <Route path="/game/medium" element={<MemoryGame numOfCards={10} />} />
-      <Route path="/game/hard" element={<MemoryGame numOfCards={18} />} />
-    </Routes> */

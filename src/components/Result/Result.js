@@ -12,7 +12,6 @@ function Result() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  // If someone lands here directly (e.g. page refresh) there's no game data, send them home
   if (!state) {
     navigate("/");
     return null;

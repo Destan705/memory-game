@@ -20,22 +20,20 @@ function MemoryGame({ numOfCards, difficultyKey, difficultyLabel, timeLimit }) {
   const theme = ICON_SETS[themeKey] || ICON_SETS.animals;
 
   const [cards, setCards] = useState([]);
-  const [flipped, setFlipped] = useState([]); // up to 2 indices face-up right now
-  const [matched, setMatched] = useState([]); // indices that are permanently matched
-  const [mismatch, setMismatch] = useState([]); // indices currently shaking
+  const [flipped, setFlipped] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [mismatch, setMismatch] = useState([]);
   const [moves, setMoves] = useState(0);
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [locked, setLocked] = useState(false);
   const finishedRef = useRef(false);
 
-  // Build and shuffle the deck once on mount, using the chosen theme's icons
   useEffect(() => {
     const icons = theme.icons.slice(0, numOfCards);
     setCards(shuffle([...icons, ...icons]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numOfCards, themeKey]);
 
-  // Countdown timer
   useEffect(() => {
     if (finishedRef.current) return;
     if (timeLeft <= 0) {
@@ -90,7 +88,6 @@ function MemoryGame({ numOfCards, difficultyKey, difficultyLabel, timeLimit }) {
         setFlipped([]);
         setLocked(false);
       } else {
-        // give the player a beat to see both cards before they flip back
         setTimeout(() => {
           setMismatch([a, b]);
           setTimeout(() => {
